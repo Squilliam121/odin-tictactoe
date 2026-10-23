@@ -1,0 +1,58 @@
+:root{
+    --bg-color: rgb(179, 194, 255);
+    --bg-color-box: rgb(199, 208, 243);
+    --bg-color-box-alt: rgb(184, 193, 227);
+    --bg-color-hover: rgb(165, 181, 244);
+}
+
+:root.red{
+    --bg-color: rgb(255, 179, 179);
+    --bg-color-box: rgb(243, 202, 199);
+    --bg-color-box-alt: rgb(220, 184, 181);
+    --bg-color-hover: rgb(244, 172, 165);
+}
+
+body{
+    background-color: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+main{
+    display: grid;
+    width: 500px;
+    height: 500px;
+    border-radius: 10px;
+    border: 5px solid black;
+    overflow: hidden;
+    grid-template: repeat(3,1fr)/repeat(3,1fr);
+}
+
+h1{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+div.box{
+    background-color: var(--bg-color-box);
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    font-size: 3rem;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight: 900;
+}
+
+div.box:nth-child(even){
+    background-color: var(--bg-color-box-alt);
+}
+
+div.box:hover{
+    background-color: var(--bg-color-hover);
+    cursor: pointer;
+}

@@ -1,9 +1,16 @@
+let activeGame = true
+
+const boxs = document.querySelectorAll(".box")
+const root = document.querySelector(":root")
+const heading = document.querySelector("h1")
+
 const game = (()=>{
     const layout = ["=","=","=","=","=","=","=","=","="]
 
     const setLayout = (index,marker)=>{
         if (layout[index] === "="){
             layout[index] = marker
+            boxs[index].textContent = marker
             return true
         }else{
             return false
@@ -34,30 +41,37 @@ const player1 = newPlayer("1","O")
 const player2 = newPlayer("2","X")
 
 const gameLogic = ((player1,player2)=>{
-    let turn = 0
+    let currentPlayer = player1
+
+    const updateHeading = () => {
+        heading.textContent = `Player ${currentPlayer.name}'s (${currentPlayer.marker}) turn`
+    }
     
     const newTurn = ()=>{
-        turn++
-        turnLogic()
+        currentPlayer = (currentPlayer === player1) ? player2 : player1
+        updateHeading()
+        root.classList.toggle("red")
     }
 
-    const turnLogic = ()=>{
-        const playerActive = (turn % 2 === 0) ? player2 : player1;
-
-        console.log(`Player ${playerActive.name}s turn!`)
+    const turnLogic = (position)=>{
+        console.log(`Player ${currentPlayer.name}s turn!`)
         console.log(game.printLayout())
 
-        const position = prompt(`Player ${playerActive.name}, where will you place your marker?`)
-
-        if (game.setLayout(position,playerActive.marker)){
-            if (checkWin(playerActive.marker)){
-                console.log(`${playerActive.name} has won!`)
+        if (game.setLayout(position,currentPlayer.marker)){
+            if (checkWin(currentPlayer.marker)){
+                activeGame = false
+                console.log(`${currentPlayer.name} has won!`)
+                heading.textContent = `${currentPlayer.name} has won!`
+                root.classList = (currentPlayer.name == "1") ? "" : "red"
+                console.log(game.printLayout())
+            }else if (checkDraw()){
+                activeGame = false
+                console.log(`Draw!`)
+                heading.textContent = "Draw!"
                 console.log(game.printLayout())
             }else{
                 newTurn()
             }
-        }else{
-            turnLogic()
         }
     }
 
@@ -82,12 +96,23 @@ const gameLogic = ((player1,player2)=>{
         return won
     }
 
+    const checkDraw = ()=>{
+        return !game.getLayout().includes("=")
+    }
+
     return {
-        turn,
+        updateHeading,
         newTurn,
         turnLogic,
-        checkWin
+        checkWin,
+        checkDraw
     }
 })(player1,player2)
 
-gameLogic.newTurn()
+boxs.forEach((box,index) =>{
+    box.addEventListener("click",()=>{
+        if (activeGame){gameLogic.turnLogic(index)}
+    })
+})
+
+gameLogic.updateHeading()
